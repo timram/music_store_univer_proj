@@ -1,11 +1,27 @@
 {
-  "name": "admin-api",
-  "version": "1.0.0",
-  "description": "admin api for musical store",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "name": "api",
+  "version": "0.0.1",
+  "private": true,
+  "description": "New Swagger API Project",
+  "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.12.3",
+    "jsonwebtoken": "^8.4.0",
+    "knex": "^0.15.2",
+    "morgan": "^1.9.1",
+    "pg": "^7.6.1",
+    "swagger-express-mw": "^0.7.0"
+  },
+  "devDependencies": {
+    "should": "^7.1.0",
+    "supertest": "^1.0.0"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "test": "swagger project test"
+  }
 }

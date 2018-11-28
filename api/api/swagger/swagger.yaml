@@ -1,0 +1,113 @@
+swagger: "2.0"
+info:
+  version: "0.0.0"
+  title: "<enter your title>"
+basePath: /
+consumes:
+  - application/json
+  - application/x-www-form-urlencoded
+produces:
+  - application/json
+parameters:
+  merchantID:
+    name: merchantID
+    in: path
+    description: The merchant identifier
+    type: integer
+    required: true
+securityDefinitions:
+  token:
+    type: apiKey
+    in: header
+    name: x-token
+
+paths:
+  # PING
+  /ping:
+      x-swagger-router-controller: ping
+      get:
+        description: Returns 'Hello' to the caller
+        operationId: hello
+        security: []
+        responses:
+          "200":
+            description: Success
+            schema:
+              $ref: "#/definitions/Ping"
+      post:
+        description: Returns 'Hello' to the caller
+        operationId: helloPost
+        x-scope:
+          - admin
+          - customer
+        security:
+          - token: []
+        parameters:
+            - name: data
+              in: body
+              required: true
+              schema:
+                $ref: '#/definitions/Ping'
+        responses:
+          "200":
+            description: Success
+            schema:
+              $ref: "#/definitions/Ping"
+
+  # Account endpoints
+  /account/login:
+    x-swagger-router-controller: account
+    post:
+      description: Authorize user
+      operationId: login
+      security: []
+      parameters:
+        - name: Credentials
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AccountCredentials'
+      responses:
+        '200':
+          description: Successfully authorized user
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+        '403':
+          description: Access denied
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+#DEFINITIONS
+definitions:
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  Ping:
+    required:
+      - message
+      - key
+    properties:
+      message:
+        type: string
+        maxLength: 10
+      key:
+        type: integer
+
+  #Account definitions
+  AccountCredentials:
+    required:
+      - login
+      - password
+    properties:
+      login:
+        type: string
+      password:
+        type: string
