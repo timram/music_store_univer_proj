@@ -1,5 +1,5 @@
 const jwt = require('./jwt');
-const knex = require('./knex');
+const { getAccount } = require('./common-queries');
 
 const denied = callback => {
   const error = new Error();
@@ -8,7 +8,7 @@ const denied = callback => {
 };
 
 const checkAccountAccess = (scope, account) =>
-  scope && scope.length > 0 && scope.includes(account.role);
+  !scope || scope.includes(account.role);
 
 module.exports = {
   tokenAuth: async (req, def, token, callback) => {
@@ -16,9 +16,7 @@ module.exports = {
       if (!token) return denied(callback);
       const { accountID } = jwt.verify(token);
 
-      const [account] = await knex('account')
-        .select('id', 'role')
-        .where('id', accountID);
+      const account = await getAccount({ id: accountID });
 
       if (!account) return denied(callback);
 

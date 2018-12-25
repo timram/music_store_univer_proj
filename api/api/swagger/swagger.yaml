@@ -9,51 +9,36 @@ consumes:
 produces:
   - application/json
 parameters:
-  merchantID:
-    name: merchantID
+  attrName:
+    name: attrName
     in: path
-    description: The merchant identifier
+    description: Instrument attribute name
+    type: string
+    required: true
+    enum:
+      - types
+      - brands
+  attrID:
+    name: attrID
+    in: path
+    description: Intrument attribute ID
     type: integer
     required: true
+  instrumentID:
+    name: instrumentID
+    in: path
+    description: Instrument ID
+    type: integer
+    required: true
+
+
 securityDefinitions:
   token:
     type: apiKey
     in: header
     name: x-token
 
-paths:
-  # PING
-  /ping:
-      x-swagger-router-controller: ping
-      get:
-        description: Returns 'Hello' to the caller
-        operationId: hello
-        security: []
-        responses:
-          "200":
-            description: Success
-            schema:
-              $ref: "#/definitions/Ping"
-      post:
-        description: Returns 'Hello' to the caller
-        operationId: helloPost
-        x-scope:
-          - admin
-          - customer
-        security:
-          - token: []
-        parameters:
-            - name: data
-              in: body
-              required: true
-              schema:
-                $ref: '#/definitions/Ping'
-        responses:
-          "200":
-            description: Success
-            schema:
-              $ref: "#/definitions/Ping"
-
+paths:  
   # Account endpoints
   /account/login:
     x-swagger-router-controller: account
@@ -75,6 +60,181 @@ paths:
             properties:
               token:
                 type: string
+        '403':
+          description: Access denied
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+  # INSTRUMENT TYPE ENDPOINTS
+  /instrument/{attrName}:
+    x-swagger-router-controller: instrument-attributes
+    parameters:
+      - $ref: '#/parameters/attrName'
+    get:
+      description: Get All instrument attributes
+      operationId: getAllAttributes
+      responses:
+        '200':
+          description: Successfully retrieved all instrument attributes
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/InstrumentAttribute'
+        '403':
+          description: Access denied
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    post:
+      description: Create new attribute
+      operationId: createAttribute
+      x-scope:
+        - admin
+      security:
+        - token: []
+      parameters:
+        - name: Attribute
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/InstrumentAttribute'
+      responses:
+        '200':
+          description: Successfully create new attribute
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/InstrumentAttribute'
+  
+  /instrument/{attrName}/{attrID}:
+    x-swagger-router-controller: instrument-attributes
+    parameters:
+      - $ref: '#/parameters/attrName'
+      - $ref: '#/parameters/attrID'
+    get:
+      description: Get instrument attribute
+      operationId: getAttribute
+      responses:
+        '200':
+          description: Successfully retrieved instrument attribute
+          schema:
+            $ref: '#/definitions/InstrumentAttribute'
+        '403':
+          description: Access denied
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    put:
+      description: Update attribute
+      operationId: updateAttribute
+      x-scope:
+        - admin
+      security:
+        - token: []
+      parameters:
+        - name: Attribute
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/InstrumentAttribute'
+      responses:
+        '200':
+          description: Successfully updated attribute
+          schema:
+            $ref: '#/definitions/InstrumentAttribute'
+        '403':
+          description: Access denied
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+  # Instruments endpoints
+  /instruments:
+    x-swagger-router-controller: instrument
+    get:
+      description: Get All instruments
+      operationId: getAllInstruments
+      responses:
+        '200':
+          description: Successfully retrieved all instruments
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MusicInstrument'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    post:
+      description: Create new instrument
+      operationId: createInstrument
+      x-scope:
+        - admin
+      security:
+        - token: []
+      parameters:
+        - name: Instrument
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/MusicInstrument'
+      responses:
+        '200':
+          description: Successfully create new instrument
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MusicInstrument'
+        '403':
+          description: Access denied
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+  /instruments/{instrumentID}:
+    x-swagger-router-controller: instrument
+    parameters:
+      - $ref: '#/parameters/instrumentID'
+    get:
+      description: Get instrument by ID
+      operationId: getInstrument
+      responses:
+        '200':
+          description: Successfully retrieved instrument
+          schema:
+            $ref: '#/definitions/MusicInstrument'
+        '404':
+          description: There is no instrument with such ID
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    put:
+      description: Update instrument
+      operationId: updateInstrument
+      x-scope:
+        - admin
+      security:
+        - token: []
+      parameters:
+        - name: Instrument
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/MusicInstrument'
+      responses:
+        '200':
+          description: Successfully updated instrument
+          schema:
+            $ref: '#/definitions/MusicInstrument'
+        '404':
+          description: There is not instrument with such ID
         '403':
           description: Access denied
         default:
@@ -110,4 +270,46 @@ definitions:
       login:
         type: string
       password:
+        type: string
+  
+  #Instrument Attribute
+  InstrumentAttribute:
+    required:
+      - name
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+  
+  # Music Instrument
+  MusicInstrument:
+    required:
+      - type_id
+      - brand_id
+      - price
+      - count
+      - availability
+      - name
+    properties:
+      id:
+        type: integer
+      type_id:
+        type: integer
+      type:
+        type: string
+      brand_id:
+        type: integer
+      brand:
+        type: string
+      price:
+        type: number
+        minimum: 0
+      count:
+        type: integer
+        minimum: 0
+        maximum: 999
+      availability:
+        type: boolean
+      name:
         type: string

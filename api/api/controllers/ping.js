@@ -12,6 +12,7 @@ const Controller = {
     throw error;
   },
   helloPost: (req, res) => new Promise((resolve, reject) => {
+    console.log(req.account);
     setTimeout(() => {
       return res.json({ message: 'ZAEBIs', key: 10 })
       // const error = new Error('some error');

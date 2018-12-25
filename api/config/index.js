@@ -7,5 +7,9 @@ module.exports = {
   },
   jwt: {
     secret: 'some_random_secret'
+  },
+  instrumentAttributes: {
+    types: 'type',
+    brands: 'brand'
   }
 };
