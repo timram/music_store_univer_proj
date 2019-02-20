@@ -11,5 +11,20 @@ module.exports = {
   instrumentAttributes: {
     types: 'type',
     brands: 'brand'
+  },
+  pagination: {
+    default: {
+      limit: 10,
+      offset: 0
+    }
+  },
+  content_pagination: {
+    default: {
+      limit: 5,
+      offset: 0
+    }
+  },
+  cdn: {
+    url: 'http://localhost:3000'
   }
 };

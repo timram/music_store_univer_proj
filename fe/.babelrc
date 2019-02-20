@@ -1,0 +1,8 @@
+{
+  "plugins": [
+    "jsx-display-if",
+    ["transform-runtime", {
+      "regenerator": true
+    }]
+  ]
+}

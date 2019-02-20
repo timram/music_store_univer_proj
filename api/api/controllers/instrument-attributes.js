@@ -32,6 +32,14 @@ const Controller = {
     
     const attribute = await InstrumentAttrsService.updateAttribute(attrName, attrID, attr.name);
     return res.json(attribute);
+  },
+
+  deleteAttribute: async (req, res) => {
+    const attrName = req.swagger.params.attrName.value;
+    const attrID = req.swagger.params.attrID.value;
+
+    const updAttributes = await InstrumentAttrsService.deleteAttribute(attrName, attrID);
+    return res.json(updAttributes);
   }
 };
 

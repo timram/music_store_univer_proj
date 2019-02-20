@@ -4,8 +4,9 @@ const app = require('express')();
 const requestLogger = require('./api/helpers/request-logger');
 const errorHandler = require('./api/helpers/error-handler');
 const authorization = require('./api/helpers/authorization');
+const cors = require('./api/helpers/cors');
 
-const config = {
+const swaggerConfig = {
   configDir: 'config',
   appRoot: __dirname,
   swaggerSecurityHandlers: {
@@ -17,9 +18,10 @@ app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.text({ type: 'application/x-www-form-urlencoded' }));
 app.use(requestLogger);
 
-SwaggerExpress.create(config, (err, swaggerExpress) => {
+SwaggerExpress.create(swaggerConfig, (err, swaggerExpress) => {
   if (err) { throw err; }
 
+  app.use(cors);
   // install middleware
   swaggerExpress.register(app);
 

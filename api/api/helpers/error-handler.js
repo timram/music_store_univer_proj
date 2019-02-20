@@ -83,6 +83,7 @@ const processDBError = (err, config = {}) => {
       ...attrs
     })
   }
+  
   throw err;
 }
 

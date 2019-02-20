@@ -1,15 +1,14 @@
 const knex = require('../helpers/knex');
 const { throwError } = require('../helpers/error-handler');
 const jwt = require('../helpers/jwt');
+const { getAccount } = require('../helpers/common-queries');
 
 const Service = {
   login: async ({ login, password }) => {
-    const [account] = await knex('account')
-      .select('id')
-      .where({
-        email: login,
-        password
-      });
+    const account = await getAccount({
+      email: login,
+      password
+    });
     
     if (!account) {
       return throwError({
@@ -18,7 +17,11 @@ const Service = {
       });
     }
 
-    return jwt.generate({ accountID: account.id });
+    const token = jwt.generate({ accountID: account.id });
+    return {
+      ...account,
+      token
+    }
   }
 };
 

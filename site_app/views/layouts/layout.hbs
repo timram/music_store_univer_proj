@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <title>{{ title }}</title>
+    <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
+    <link rel='stylesheet' href='/stylesheets/styles.css' />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  </head>
+  <body>
+    {{> header}}
+    <div class="container mt-3">
+      <div class="row no-gutters">
+        <div class="col full-size">
+          {{{body}}}
+        </div>
+      </div>
+    </div>
+    {{> footer}}
+    <script src='/javascripts/jquery.min.js'></script>
+    <script src='/javascripts/popper.min.js'></script>
+    <script src='/javascripts/bootstrap.min.js'></script>
+  </body>
+</html>

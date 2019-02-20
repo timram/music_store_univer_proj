@@ -30,7 +30,37 @@ parameters:
     description: Instrument ID
     type: integer
     required: true
-
+  postID:
+    name: postID
+    in: path
+    description: post ID
+    type: integer
+    required: true
+  limit:
+    name: limit
+    in: query
+    description: Max number of returned items
+    type: integer
+  offset:
+    name: offset
+    in: query
+    description: Offset of returned items
+    type: integer
+  post_type:
+    name: post_type
+    in: query
+    description: type of post
+    type: string
+  type:
+    name: type
+    in: query
+    description: type of instrument
+    type: string
+  brand:
+    name: brand
+    in: query
+    description: brand of instrument
+    type: string
 
 securityDefinitions:
   token:
@@ -60,6 +90,27 @@ paths:
             properties:
               token:
                 type: string
+        '403':
+          description: Access denied
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  
+  /account/check:
+    x-swagger-router-controller: account
+    post:
+      description: Check account token
+      operationId: checkAccount
+      x-scope:
+        - admin
+      security:
+        - token: []
+      responses:
+        '200':
+          description: Successfully authorized user
+          schema:
+            $ref: '#/definitions/Account'
         '403':
           description: Access denied
         default:
@@ -131,7 +182,7 @@ paths:
     put:
       description: Update attribute
       operationId: updateAttribute
-      x-scope:
+      x-scope: 
         - admin
       security:
         - token: []
@@ -152,10 +203,33 @@ paths:
           description: Error
           schema:
             $ref: '#/definitions/ErrorResponse'
+    delete:
+      description: Delete Attribute
+      operationId: deleteAttribute
+      x-scope:
+        - admin
+      security:
+        - token: []
+      responses:
+        '200':
+          description: Successfully deleted attribute
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/InstrumentAttribute'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
 
   # Instruments endpoints
   /instruments:
     x-swagger-router-controller: instrument
+    parameters:
+      - $ref: '#/parameters/limit'
+      - $ref: '#/parameters/offset'
+      - $ref: '#/parameters/type'
+      - $ref: '#/parameters/brand'
     get:
       description: Get All instruments
       operationId: getAllInstruments
@@ -163,9 +237,18 @@ paths:
         '200':
           description: Successfully retrieved all instruments
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/MusicInstrument'
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '#/definitions/MusicInstrument'
+              total:
+                type: integer
+              limit:
+                type: integer
+              offset:
+                type: integer
         default:
           description: Error
           schema:
@@ -241,6 +324,166 @@ paths:
           description: Error
           schema:
             $ref: '#/definitions/ErrorResponse'
+    delete:
+      description: Delete instrument
+      operationId: deleteInstrument
+      x-scope:
+        - admin
+      security:
+        - token: []
+      responses:
+        '204':
+          description: Successfully deleted instrument
+        '404':
+          description: There is not instrument with such ID
+        '403':
+          description: Access denied
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+# Content endpoints
+  /content/post-types:
+    x-swagger-router-controller: content
+    get:
+      description: get all post types
+      operationId: getPostTypes
+      responses:
+        '200':
+          description: Successfully retrieved all post types
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              display_name:
+                type: string
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+  /content/posts:
+    x-swagger-router-controller: content
+    parameters:
+      - $ref: '#/parameters/limit'
+      - $ref: '#/parameters/offset'
+      - $ref: '#/parameters/post_type'
+    get:
+      description: Get All posts
+      operationId: getAllPosts
+      responses:
+        '200':
+          description: Successfully retrieved all posts
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '#/definitions/Post'
+              total:
+                type: integer
+              limit:
+                type: integer
+              offset:
+                type: integer
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    post:
+      description: Create new post
+      operationId: createPost
+      x-scope:
+        - admin
+      security:
+        - token: []
+      parameters:
+        - name: Post
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Post'
+      responses:
+        '200':
+          description: Successfully created new post
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Post'
+        '403':
+          description: Access denied
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+  /content/posts/{postID}:
+    x-swagger-router-controller: content
+    parameters:
+      - $ref: '#/parameters/postID'
+    get:
+      description: Get post by ID
+      operationId: getPost
+      responses:
+        '200':
+          description: Successfully retrieved instrument
+          schema:
+            $ref: '#/definitions/Post'
+        '404':
+          description: There is no instrument with such ID
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    put:
+      description: Update post
+      operationId: updatePost
+      x-scope:
+        - admin
+      security:
+        - token: []
+      parameters:
+        - name: Post
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Post'
+      responses:
+        '200':
+          description: Successfully updated post
+          schema:
+            $ref: '#/definitions/Post'
+        '404':
+          description: There is not instrument with such ID
+        '403':
+          description: Access denied
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    delete:
+      description: Delete post
+      operationId: deletePost
+      x-scope:
+        - admin
+      security:
+        - token: []
+      responses:
+        '204':
+          description: Successfully deleted post
+        '404':
+          description: There is not post with such ID
+        '403':
+          description: Access denied
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
 
 #DEFINITIONS
 definitions:
@@ -281,6 +524,8 @@ definitions:
         type: integer
       name:
         type: string
+      count:
+        type: integer
   
   # Music Instrument
   MusicInstrument:
@@ -312,4 +557,55 @@ definitions:
       availability:
         type: boolean
       name:
+        type: string
+      created_at:
+        type: string
+      image:
+        type: string
+      image_url:
+        type: string
+  
+  # Account
+  Account:
+    required:
+      - fname
+      - lname
+      - email
+    properties:
+      id:
+        type: integer
+      fname:
+        type: string
+      lname:
+        type: string
+      email:
+        type: string
+      role:
+        type: string
+
+  # Post
+  Post:
+    required:
+      - title
+      - body
+      - enabled
+      - post_type_id
+    properties:
+      id:
+        type: integer
+      title:
+        type: string
+      body:
+        type: string
+      created_at:
+        type: string
+      image_url:
+        type: string
+      image:
+        type: string
+      enabled:
+        type: boolean
+      post_type_id:
+        type: integer
+      post_type:
         type: string

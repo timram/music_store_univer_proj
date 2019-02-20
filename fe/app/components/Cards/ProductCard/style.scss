@@ -1,0 +1,22 @@
+.components--product--card {
+  margin: 10px 0;
+  display: block;
+  box-shadow: 0 3px 8px 0px #555;
+  border-radius: 10px;
+  padding: 10px;
+  text-decoration: none;
+}
+
+.components--product--card--content {
+  display: flex;
+  align-items: flex-start;
+  color: #fff;
+}
+
+.components--product--card--content-block {
+  margin-right: 10px;
+}
+
+.components--product--card--content-image {
+  max-width: 150px;
+}

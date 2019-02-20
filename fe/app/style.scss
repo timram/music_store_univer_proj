@@ -1,0 +1,24 @@
+$maxAppWidth: 1400px;
+$smallPadding: 8px;
+$mediumPadding: 16px;
+$bigPadding: 24px;
+$smallMargin: 8px;
+$mediumMargin: 16px;
+$bigMargin: 24px;
+$hugeMargin: 34px;
+
+#app-root-container {
+  max-width: $maxAppWidth;
+  margin: auto;
+  overflow: hidden;
+}
+
+
+.components--page--content--wrapper {
+  width: 80%;
+}
+
+.components--form--item {
+  margin-top: $hugeMargin;
+  margin-bottom: $mediumMargin;
+}

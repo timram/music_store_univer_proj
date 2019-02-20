@@ -1,0 +1,81 @@
+GET http://localhost:10010/ping
+
+###
+POST http://localhost:10010/ping
+Content-Type: application/json
+x-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SUQiOjEsImlhdCI6MTU0NDkxNTMzM30.uLjHPvAll6VNX87heECRA-S26dKzhcembS9bD8rcicM
+
+{
+  "message": "asdf",
+  "key": 10
+}
+
+###
+POST http://localhost:10010/account/login
+Content-Type: application/json
+
+{
+  "password": "1234",
+  "login": "test@mail.com"
+}
+
+###
+GET http://localhost:10010/instrument/asdf
+x-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SUQiOjEsImlhdCI6MTU0NTU3MDk3M30.kZu3UymIWV9yU6jJEN4uaZ717w66EdHSwEFCKmqfnDU
+
+###
+GET http://localhost:10010/instrument/brands
+x-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SUQiOjEsImlhdCI6MTU0NTU3MDk3M30.kZu3UymIWV9yU6jJEN4uaZ717w66EdHSwEFCKmqfnDU
+
+###
+POST http://localhost:10010/instrument/brands
+x-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SUQiOjEsImlhdCI6MTU0NTU3MDk3M30.kZu3UymIWV9yU6jJEN4uaZ717w66EdHSwEFCKmqfnDU
+Content-Type: application/json
+
+{
+  "name": "Samsung"
+}
+
+###
+GET http://localhost:10010/instruments?offset=0
+
+###
+GET http://localhost:10010/instruments/15
+
+###
+GET http://localhost:10010/instruments?brand=Samsumng,Cort
+
+###
+POST http://localhost:10010/instruments?type=струнные
+x-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SUQiOjEsImlhdCI6MTU0NTU3MDk3M30.kZu3UymIWV9yU6jJEN4uaZ717w66EdHSwEFCKmqfnDU
+Content-Type: application/json
+
+{
+  "name": "joopjop",
+  "type_id": 10,
+  "brand_id": 2,
+  "price": 0,
+  "count": 0,
+  "availability": true
+}
+
+###
+POST http://localhost:10010/account/check
+Content-Type: application/json
+x-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SUQiOjEsImlhdCI6MTU0NTU3MDk3M30.kZu3UymIWV9yU6jJEN4uaZ717w66EdHSwEFCKmqfnDU
+
+###
+GET http://localhost:10010/content/instr
+
+###
+PUT http://localhost:10010/content/posts/1
+Content-Type: application/json
+x-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SUQiOjEsImlhdCI6MTU0NTU3MDk3M30.kZu3UymIWV9yU6jJEN4uaZ717w66EdHSwEFCKmqfnDU
+
+{
+  "title": "lol title",
+  "body": "<p>hmmm what A content!</p>"
+}
+
+###
+GET http://localhost:10010/content/post_types

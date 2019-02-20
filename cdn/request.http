@@ -1,0 +1,8 @@
+POST http://localhost:3000/upload
+Content-Type: application/json
+
+{
+  "bucket": "posts",
+  "name": "1.jpeg",
+  "imageBase64": "somei mage"
+}
