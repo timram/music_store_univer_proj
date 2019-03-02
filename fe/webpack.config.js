@@ -5,13 +5,14 @@ const webpack = require('webpack');
 module.exports = {
   mode: 'production',
   entry: {
-    app: './app/admin-dashboard.jsx'
+    'admin-dashboard': './app/admin-dashboard.jsx',
+    'catalog-app': './app/catalog-app.jsx'
   },
   output: {
     path: path.resolve(__dirname, './public'),
     publicPath: '/public/',
-    filename: 'bundle.js',
-    sourceMapFilename: 'bundle.map'
+    filename: '[name].js',
+    sourceMapFilename: '[name].map'
   },
   plugins: [
     new ExtractTextPlugin({ fileName: 'stylesBundle.css' })

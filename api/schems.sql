@@ -1,13 +1,17 @@
-DROP TABLE IF EXISTS account;   
 DROP TABLE IF EXISTS music_instrument;
 DROP TABLE IF EXISTS instrument_type;
 DROP TABLE IF EXISTS instrument_brand;
 DROP TABLE IF EXISTS post;
 DROP TABLE IF EXISTS post_type;
+DROP TABLE IF EXISTS order_item;
+DROP TABLE IF EXISTS user_order;
+DROP TABLE IF EXISTS account;
 
 DROP TYPE IF EXISTS accountRole;
+DROP TYPE IF EXISTS orderSTatus;
 
 CREATE TYPE accountRole AS ENUM ('admin', 'customer');
+CREATE TYPE orderStatus AS ENUM ('pending', 'success', 'fail');
 
 CREATE TABLE account(
     id serial,
@@ -73,14 +77,38 @@ CREATE TABLE post(
     description varchar(1028) DEFAULT '',
     enabled boolean NOT NULL DEFAULT false,
     post_type_id integer NOT NULL,
+    CONSTRAINT post_pk  PRIMARY KEY (id),
     CONSTRAINT post_typ_post_fk FOREIGN KEY (post_type_id) REFERENCES post_type (ID) ON DELETE CASCADE ON UPDATE CASCADE
+) WITH (
+    OIDS=FALSE
+);
+
+CREATE TABLE user_order(
+    id serial UNIQUE,
+    account_id integer NOT NULL,
+    created_at timestamp NOT NULL DEFAULT now(),
+    status orderStatus NOT NULL,
+    CONSTRAINT user_order_pk  PRIMARY KEY (id),
+    CONSTRAINT order_account_fk FOREIGN KEY (account_id) REFERENCES account (ID) ON DELETE CASCADE ON UPDATE CASCADE
+) WITH (
+    OIDS=FALSE
+);
+
+CREATE TABLE order_item(
+    id serial,
+    item_id integer NOT NULL,
+    order_id integer NOT NULL,
+    quantity integer NOT NULL,
+    CONSTRAINT order_item_pk  PRIMARY KEY (id),
+    CONSTRAINT order_item_fk FOREIGN KEY (item_id) REFERENCES music_instrument (ID) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT order_item_order_fk FOREIGN KEY (order_id) REFERENCES user_order (id) ON DELETE CASCADE ON UPDATE CASCADE
 ) WITH (
     OIDS=FALSE
 );
 
 INSERT INTO account(fname, lname, email, password, role) values('Timur', 'Ramazanov', 'test@mail.com', '1234', 'admin');
 
-INSERT INTO post_type(name, display_name) values('stock', 'Акции');
+INSERT INTO post_type(name, display_name    ) values('stock', 'Акции');
 INSERT INTO post_type(name, display_name) values('news', 'Новости');
 INSERT INTO post_type(name, display_name) values('blog', 'Блог');
 

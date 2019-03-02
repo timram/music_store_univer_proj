@@ -23,7 +23,7 @@ module.exports = {
       if (!checkAccountAccess(req.swagger.operation['x-scope'], account)) {
         return denied(callback);
       }
- 
+      
       req.account = account;
 
       return callback(null);

@@ -1,0 +1,41 @@
+<div class="home-banner">
+  <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+      {{#each stocks}}
+        <li
+          data-target="#carouselExampleIndicators"
+          data-slide-to="{{@index}}"
+          {{#if @index}}
+          {{else}}
+            class="active">
+          {{/if}}
+        </li>
+      {{/each}}
+    </ol>
+    <div class="carousel-inner">
+      {{#each stocks}}
+      <div
+        {{#if @index}}
+        class="carousel-item"
+        {{else}}
+          class="carousel-item active"
+        {{/if}}
+      >
+        <img class="d-block w-100" src="{{this.image_url}}" alt="{{this.title}}">
+        <div class="carousel-caption">
+          <h5>{{this.title}}</h5>
+          <p class="d-none d-md-block">{{this.description}}</p>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
+</div>

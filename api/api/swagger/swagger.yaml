@@ -18,6 +18,12 @@ parameters:
     enum:
       - types
       - brands
+  accID:
+    name: accID
+    in: path
+    description: Account ID
+    type: integer
+    required: true
   attrID:
     name: attrID
     in: path
@@ -51,6 +57,11 @@ parameters:
     in: query
     description: type of post
     type: string
+  enabled:
+    name: enabled
+    in: query
+    description: post enabled
+    type: boolean
   type:
     name: type
     in: query
@@ -61,6 +72,36 @@ parameters:
     in: query
     description: brand of instrument
     type: string
+  available:
+    name: available
+    in: query
+    description: product availability
+    type: boolean
+  sort_field:
+    name: sort_field
+    in: query
+    description: Sorting field
+    type: string
+    enum:
+      - price
+      - created_at
+  sort_order:
+    name: sort_order
+    in: query
+    description: Sorting direction
+    type: string
+    enum:
+      - asc
+      - desc
+  status:
+    name: status
+    in: query
+    description: order status
+    type: string
+    enum:
+      - pending
+      - success
+      - fail
 
 securityDefinitions:
   token:
@@ -96,7 +137,77 @@ paths:
           description: Error
           schema:
             $ref: '#/definitions/ErrorResponse'
-  
+  /account/profile/{accID}:
+    x-swagger-router-controller: account
+    parameters:
+      - $ref: '#/parameters/accID'
+    get:
+      description: Get account
+      operationId: getAccount
+      x-scope:
+        - admin
+        - customer
+        - manager
+      security:
+        - token: []
+      responses:
+        '200':
+          description: Successfully get user
+          schema:
+              $ref: '#/definitions/Account'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    put:
+      description: update user
+      operationId: update
+      x-scope:
+        - admin
+        - customer
+        - manager
+      security:
+        - token: []
+      parameters:
+        - name: Account
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AccountData'
+      responses:
+        '200':
+          description: Successfully updated user
+          schema:
+            $ref: '#/definitions/Account'
+        '400':
+          description: Such user already exists
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /register:
+    x-swagger-router-controller: account
+    post:
+      description: Create user
+      operationId: create
+      security: []
+      parameters:
+        - name: Account
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AccountData'
+      responses:
+        '200':
+          description: Successfully created user
+          schema:
+            $ref: '#/definitions/Account'
+        '400':
+          description: Such user already exists
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
   /account/check:
     x-swagger-router-controller: account
     post:
@@ -230,6 +341,9 @@ paths:
       - $ref: '#/parameters/offset'
       - $ref: '#/parameters/type'
       - $ref: '#/parameters/brand'
+      - $ref: '#/parameters/available'
+      - $ref: '#/parameters/sort_field'
+      - $ref: '#/parameters/sort_order'
     get:
       description: Get All instruments
       operationId: getAllInstruments
@@ -372,6 +486,7 @@ paths:
       - $ref: '#/parameters/limit'
       - $ref: '#/parameters/offset'
       - $ref: '#/parameters/post_type'
+      - $ref: '#/parameters/enabled'
     get:
       description: Get All posts
       operationId: getAllPosts
@@ -484,6 +599,99 @@ paths:
           description: Error
           schema:
             $ref: '#/definitions/ErrorResponse'
+  
+  # ORDER endpoints
+  /orders:
+    x-swagger-router-controller: order
+    parameters:
+      - $ref: '#/parameters/limit'
+      - $ref: '#/parameters/offset'
+      - $ref: '#/parameters/status'
+    get:
+      description: Get All orders
+      operationId: getAllOrders
+      x-scope:
+        - admin
+      security:
+        - token: []
+      responses:
+        '200':
+          description: Successfully retrieved all posts
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '#/definitions/Order'
+              total:
+                type: integer
+              limit:
+                type: integer
+              offset:
+                type: integer
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /orders/{accID}:
+    x-swagger-router-controller: order
+    parameters:
+      - $ref: '#/parameters/accID'
+      - $ref: '#/parameters/limit'
+      - $ref: '#/parameters/offset'
+      - $ref: '#/parameters/status'
+    get:
+      description: get All orders for customer
+      operationId: getallCustomerOrders
+      x-scope:
+        - admin
+        - customer
+      security:
+        - token: []
+      responses:
+        '200':
+          description: Successfully retrieved all posts
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '#/definitions/Order'
+              total:
+                type: integer
+              limit:
+                type: integer
+              offset:
+                type: integer
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    post:
+      description: create order for customer
+      operationId: createOrderForCustomer
+      x-scope:
+        - admin
+        - customer
+      security:
+        - token: []
+      parameters:
+        - name: Order
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Order'
+      responses:
+        '204':
+          description: Successfully retrieved all posts
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      
+      
 
 #DEFINITIONS
 definitions:
@@ -514,7 +722,13 @@ definitions:
         type: string
       password:
         type: string
-  
+      role:
+        type: string
+        enum:
+          - admin
+          - customer
+          - manager
+        
   #Instrument Attribute
   InstrumentAttribute:
     required:
@@ -582,7 +796,22 @@ definitions:
         type: string
       role:
         type: string
-
+  AccountData:
+    required:
+      - fname
+      - lname
+      - email
+    properties:
+      fname:
+        type: string
+      lname:
+        type: string
+      email:
+        type: string
+      role:
+        type: string
+      password:
+        type: string
   # Post
   Post:
     required:
@@ -609,3 +838,26 @@ definitions:
         type: integer
       post_type:
         type: string
+  
+  # Order
+  Order:
+    properties:
+      status:
+        type: string
+        enum:
+          - pending
+          - success
+          - fail
+      items:
+        type: array
+        items:
+          type: object
+          required:
+            - item_id
+            - quantity
+          properties:
+            item_id:
+              type: integer
+            quantity:
+              type: integer
+      

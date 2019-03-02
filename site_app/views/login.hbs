@@ -1,0 +1,26 @@
+<h3>Авторизироваться</h3>
+<form method="POST" action="/login">
+  <div class="form-group">
+    <label for="exampleInputEmail1">Почта</label>
+    <input
+      {{#if login}}
+      value="{{login}}"
+      {{/if}}
+      required
+      type="email"
+      name="login"
+      class="form-control"
+      id="exampleInputEmail1"
+      aria-describedby="emailHelp"
+      placeholder="example@mail.com">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Пароль</label>
+    <input required type="password" name="password" class="form-control" id="exampleInputPassword1">
+  </div>
+  <button type="submit" class="btn btn-primary">Войти</button>
+  <a class="ml-2" href="/register">Зарегистрироваться</a>
+</form>
+{{#if error}}
+<p class="text-danger mt-2">Не верный логин или пароль</p>
+{{/if}}

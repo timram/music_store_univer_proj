@@ -16,10 +16,15 @@ export default ({
   }, {});
 
   return {
-    getResourcesList: async queryParams => {
-      const params = Object.keys(queryParams)
-        .map(name => ({ name, value: queryParams[name] }));
-      
+    getResourcesList: async (queryParams, defaultParams = {}) => {
+      const mergedParams = {
+        ...defaultParams,
+        ...queryParams
+      };
+
+      const params = Object.keys(mergedParams)
+        .map(name => ({ name, value: mergedParams[name] }));
+
       const { data } = await apiRequest({
         method: 'get',
         endpoint: applyQueryParams({

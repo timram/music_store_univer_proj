@@ -1,0 +1,30 @@
+<h2 class="text-primary">Новинки:</h2>
+<div class="catalog-wrapper">
+  <div class="products-grid">
+    {{#each products}}
+      <div class="products-grid-card">
+        <a
+          href="/products/{{this.id}}"
+          class="d-block h-100 products-grid-card-content">
+          <div class="d-flex  justify-content-center align-items-center">
+            <img
+              class="card-img-top"
+              src="{{this.image_url}}"
+            >
+          </div>
+          <div class="card-body">
+            <p class="product-card-meta card-text text-capitalize">
+              {{this.type}} / {{this.brand}}
+            </p>
+            <h4 class="product-card-title card-title text-capitalize">
+              {{this.name}}
+            </h4>
+            <p class="product-card-price card-text text-dark">
+              {{this.price}} руб.
+            </p>
+          </div>
+        </a>
+      </div>
+    {{/each}}
+  </div>
+</div>

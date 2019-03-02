@@ -6,6 +6,7 @@ import { applyQueryParams } from '../../helpers/searchParams';
 import cx from 'classnames';
 import style from './style.scss';
 import { withStyles } from '@material-ui/core/styles';
+import * as theme from '../../theme';
 
 const styles = theme => ({
   root: {
@@ -50,8 +51,7 @@ const Pagination = ({
   limit,
   lastPage,
   onClick,
-  classes,
-  theme
+  classes
 }) =>
   <Grid justify="center" className={classes.root} container spacing={16}>
     <PaginationButton

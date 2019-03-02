@@ -2,8 +2,10 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+const session = require('express-session');
 var logger = require('morgan');
 const hbs = require('express-handlebars');
+const RedisStore = require('connect-redis')(session);
 
 const router = require('./routes');
 
@@ -23,9 +25,26 @@ app.set('view engine', 'hbs');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+
+app.use(session({
+  sotre: new RedisStore({
+    host: 'localhost',
+    port: 6379
+  }),
+  secret: 'some secret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {}
+}));
+
+app.use((req, res, next) => {
+  res.locals.session = req.session;
+  next();
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.disable('view cache')
+
 
 app.use((req, res, next) => {
   res.setHeader('Cache-Control', 'no-cache');

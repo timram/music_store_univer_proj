@@ -8,6 +8,11 @@ const Controller = {
       limit: req.swagger.params.limit.value,
       type: req.swagger.params.type.value,
       brand: req.swagger.params.brand.value,
+      availability: req.swagger.params.available.value,
+      sort: {
+        field: req.swagger.params.sort_field.value,
+        order: req.swagger.params.sort_order.value
+      }
     });
     return res.json(instruments);
   },

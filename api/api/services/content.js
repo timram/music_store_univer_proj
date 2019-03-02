@@ -39,24 +39,29 @@ const postsSelection = [
   'post_type.display_name as post_type'
 ];
 
-const getPostQuery = type => {
+const getPostQuery = (type, enabled) => {
   const query = knex('post')
     .innerJoin('post_type', 'post_type.id', 'post.post_type_id');
   
+  const filters = {};
   if (type) {
-    return query.where('post_type.name', type);  
+    filters['post_type.name'] = type;
+  }
+  if (enabled !== undefined) {
+    filters['post.enabled'] = enabled;
   }
 
-  return query;
+  return query.where(filters);  
 }
 
 const Service = {
   getAllPosts: async ({
     limit = config.content_pagination.default.limit,
     offset = config.content_pagination.default.offset,
-    type
+    type,
+    enabled
   }) => {
-    const postsQuery = getPostQuery(type);
+    const postsQuery = getPostQuery(type, enabled);
     const finalGetPostsQuery = flow(
       applyRestrictionsToQuery({ limit, offset }),
       applyOrderToQuery('created_at', 'desc'),

@@ -1,0 +1,77 @@
+<h3 class="text-primary">
+  Регистрация
+</h3> 
+<form method="POST" action="/register">
+  <div class="form-row">
+    <div class="form-group col">
+      <label for="fname">Имя</label>
+      <input
+        value="{{fname}}"
+        type="text"
+        name="fname"
+        id="fname"
+        class="form-control"
+        placeholder="Иван"
+        required
+      >
+    </div>
+    <div class="form-group col">
+      <label for="lname">Фамилия</label>
+      <input
+        value="{{lname}}"
+        type="text"
+        name="lname"
+        id="lname"
+        class="form-control"
+        placeholder="Иванов"
+        required
+      >
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Почта</label>
+    <input
+      value="{{email}}"
+      required
+      type="email"
+      name="email"
+      class="form-control"
+      id="exampleInputEmail1"
+      placeholder="example@mail.com"
+    >
+    {{#if errors.unique.email}}
+      <p class="text-danger mt-2">Пользователь с такой почтой уже существует</p>
+    {{/if}}
+  </div>
+  <div class="form-row">
+    <div class="form-group col">
+      <label for="passwrod">Пароль</label>
+      <input
+        value="{{password}}"
+        type="password"
+        name="password"
+        id="password"
+        class="form-control"
+        required
+      >
+      {{#if errors.validation.password}}
+        <p class="text-danger mt-2">{{errors.validation.password}}</p>
+      {{/if}}
+    </div>
+    <div class="form-group col">
+      <label for="repeat_passwrod">Подтвердите пароль</label>
+      <input
+        value="{{repeat_password}}"
+        type="password"
+        name="repeat_password"
+        id="repeat_password"
+        class="form-control"
+        required
+      >
+      {{#if errors.validation.repeat_password}}
+        <p class="text-danger mt-2">{{errors.validation.repeat_password}}</p>
+      {{/if}}
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Зарегистрировать</button>
+</form>

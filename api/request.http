@@ -16,8 +16,21 @@ Content-Type: application/json
 
 {
   "password": "1234",
-  "login": "test@mail.com"
+  "login": "test@mail.com",
+  "role": "admin"
 }
+
+###
+PUT http://localhost:10010/account/2
+x-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SUQiOjEsImlhdCI6MTU1MTM4NTgyN30.EhtOnganVNpFQVY9k7Vd7tE9H1_za-Y22q7VjnVq4ko
+Content-Type: application/json
+
+{
+  "fname": "Allah",
+  "lname": "Ackbar",
+  "email": "wow@mail.com"
+}
+
 
 ###
 GET http://localhost:10010/instrument/asdf
@@ -37,13 +50,25 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:10010/instruments?offset=0
+GET http://localhost:10010/instruments?offset=0&available=false
 
 ###
 GET http://localhost:10010/instruments/15
 
 ###
-GET http://localhost:10010/instruments?brand=Samsumng,Cort
+GET http://localhost:10010/instruments
+
+###
+POST http://localhost:10010/orders/2
+Content-Type: application/json
+x-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SUQiOjEsImlhdCI6MTU1MTUwNTEzMH0.UJ2rMz1mi--VVAbsgoka3sh6o-0SABedwH1BBbc7OtE
+
+{
+  "items": [
+    { "item_id": 18, "quantity": 3 },
+    { "item_id": 17, "quantity": 2 }
+  ]
+}
 
 ###
 POST http://localhost:10010/instruments?type=струнные
@@ -65,7 +90,7 @@ Content-Type: application/json
 x-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SUQiOjEsImlhdCI6MTU0NTU3MDk3M30.kZu3UymIWV9yU6jJEN4uaZ717w66EdHSwEFCKmqfnDU
 
 ###
-GET http://localhost:10010/content/instr
+GET http://localhost:10010/content/posts?post_type=stock&enabled=true
 
 ###
 PUT http://localhost:10010/content/posts/1

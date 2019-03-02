@@ -25,12 +25,20 @@ const processInstrumentDBErrors = (err, instrument) => processDBError(err, {
   }
 });
 
-const getUpdInstrumentForDB = getUpdItemForDB({
-  fields: ['name', 'type_id', 'brand_id', 'price', 'count', 'availability'],
-  uploadImage: true,
-  imageNameBuilder: item =>
-    `${item.name.replace(/ /g, '_')}_${item.type_id}_${item.brand_id}.jpeg`
-})
+const getUpdInstrumentForDB = async (instrument, ignoreImage) => {
+  const updInstrument = await getUpdItemForDB({
+    fields: ['name', 'type_id', 'brand_id', 'price', 'count', 'availability'],
+    uploadImage: true,
+    imageNameBuilder: item =>
+      `${item.name.replace(/ /g, '_')}_${item.type_id}_${item.brand_id}.jpeg`
+  })(instrument, ignoreImage);
+
+  if (typeof updInstrument.count !== 'undefined' && updInstrument.availability) {
+    updInstrument.availability = updInstrument.count > 0;
+  }
+
+  return updInstrument;
+};
 
 const instrumentsSelection = [
   'music_instrument.id as id',
@@ -46,7 +54,7 @@ const instrumentsSelection = [
   'instrument_type.name as type'
 ];
 
-const getInstrumentQuery = ({ type, brand }) => {
+const getInstrumentQuery = ({ type, brand, availability }) => {
   let query = knex('music_instrument')
     .innerJoin('instrument_type', 'instrument_type.id', 'music_instrument.type_id')
     .innerJoin('instrument_brand', 'instrument_brand.id', 'music_instrument.brand_id');
@@ -56,6 +64,9 @@ const getInstrumentQuery = ({ type, brand }) => {
   }
   if (brand) {
     query = query.whereIn('instrument_brand.name', brand);
+  }
+  if (availability !== undefined) {
+    query = query.where('music_instrument.availability', availability);
   }
 
   return query;
@@ -71,7 +82,9 @@ const Service = {
     limit = config.pagination.default.limit,
     offset = config.pagination.default.offset,
     type,
-    brand
+    brand,
+    availability,
+    sort
   }) => {
     const [
       formattedTypes,
@@ -80,11 +93,15 @@ const Service = {
 
     const instrumentsQuery = getInstrumentQuery({
       type: formattedTypes,
-      brand: formattedBrand
+      brand: formattedBrand,
+      availability
     });
+
+    const sortField = sort.field || 'created_at';
+    const sortOrder = sort.order || 'desc';
     const finalInstrumentsQuery = flow(
       applyRestrictionsToQuery({ limit, offset }),
-      applyOrderToQuery('created_at', 'desc'),
+      applyOrderToQuery(sortField, sortOrder),
       applySelectionToQuery(instrumentsSelection)
     )(instrumentsQuery);
 
@@ -98,7 +115,11 @@ const Service = {
       total: parseFloat(total),
       limit,
       offset,
-      filters: { type: formattedTypes, brand: formattedBrand }
+      filters: { type: formattedTypes, brand: formattedBrand },
+      sort: {
+        field: sortField,
+        order: sortOrder
+      }
     }
   },
     
@@ -135,7 +156,7 @@ const Service = {
     try {
       await Service.getInstrument(instrID);
       
-      const updInstrument = await getUpdInstrumentForDB(instrument);
+      const updInstrument = await getUpdInstrumentForDB(instrument, true);
 
       await knex('music_instrument')
         .update(updInstrument)

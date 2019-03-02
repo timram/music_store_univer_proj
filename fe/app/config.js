@@ -24,3 +24,22 @@ export const labels = {
 export const errorCodes = {
   duplication: 'UNIQUE_DUPLICATION'
 }
+
+export const catalog = {
+  defaults: {
+    limit: 12
+  },
+
+  domSelectors: {
+    loader: '.catalog-loader'
+  }
+};
+
+export const sorting = {
+  options: [
+    { field: 'price', order: 'desc', label: 'Цена: По убыванию' },
+    { field: 'price', order: 'asc', label: 'Цена: По возростанию' },
+    { field: 'created_at', order: 'desc', label: 'Новые' },
+    { field: 'created_at', order: 'asc', label: 'Старые' }
+  ]
+}

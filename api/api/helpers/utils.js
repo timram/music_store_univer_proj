@@ -5,7 +5,7 @@ const getOffset = ({ offset, limit }) => offset <= 0
   : limit * offset;
 
 const getUpdItemForDB = ({ fields, uploadImage, imageNameBuilder }) =>
-  async item => {
+  async (item, ignoreImage) => {
     const mappedItem = fields.reduce((acc, f) => {
       if (typeof item[f] !== 'undefined') {
         return {
@@ -23,7 +23,7 @@ const getUpdItemForDB = ({ fields, uploadImage, imageNameBuilder }) =>
           name: imageNameBuilder(item),
           imageBase64: item.image
         })
-      } else {
+      } else if (!ignoreImage) {
         mappedItem.image_url = cdn.getNoImageUrl();
       }
     }

@@ -1,0 +1,36 @@
+<h1>Корзина</h1>
+{{#if items}}
+  <div class="cart-items-wrapper">
+    {{#each items}}
+      <div href="/products/{{this.id}}" class="card mb-3">
+        <h5 class="card-header">
+          {{this.name}}
+          <a href="/cart/delete/{{this.id}}" class="delete-cart-item-icon">X</a>
+        </h5>
+        <a href="/products/{{this.id}}" class="card-body d-flex">
+          <div class="product-image-container w-25 mr-3">
+            <img
+              src="{{this.image_url}}"
+            >
+          </div>
+          <div class="w-100 ml-3">
+            <p class="card-text">{{this.type}} / {{this.brand}}</p>
+            <p class="card-text">{{this.price}} руб. X {{this.quantity}}</p>
+          </div>
+        </a>
+      </div>
+    {{/each}}
+    <span class="cart-summary mr-3 font-weight-bold">Общая стоимость: {{totalPrice}} руб.</span>
+    {{#if hasAccount}}
+      <a href="/cart/create-order" class="btn btn-primary">
+        Оформить заказ
+      </a>
+    {{else}}
+      <a href="/login" class="btn btn-primary">
+        Авторизируйтесь для оформления заказа
+      </a>
+    {{/if}}
+  </div>
+{{else}}
+  <h3>Корзина пустая</h3>
+{{/if}}

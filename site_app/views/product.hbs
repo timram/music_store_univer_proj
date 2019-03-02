@@ -1,0 +1,46 @@
+<div class="product-page-wrapper">
+  <div class="product-top-content">
+    <div class="product-image-container mr-3 w-100">
+      <img src="{{product.image_url}}">
+    </div>
+    <div class="product-info-container w-100 ml-3">
+      <h3 class="text-primary text-center text-capitalize">{{product.name}}</h3>
+      <span class="text-dark font-weight-bold">Бренд: {{product.brand}}</span>
+      /
+      <span class="text-dark font-weight-bold">Тип: {{product.type}}</span>
+      <p class="text-dark font-weight-bold mt-3">Цена: {{product.price}} руб.</p>
+      <div class="add-to-cart-wrapper mt-3">
+        {{#if product.availability}}
+          {{#if exceedLimit}}
+            <span class="badge badge-danger badge-pill p-2">
+              Вы добавили товар в полном объеме
+            </span>
+          {{else}}
+          <form class="form-inline" method="POST" action="/products/{{product.id}}">
+            <input
+              type="number"
+              name="quantity"
+              id="quantity"
+              value="1"
+              min="1"
+              max="{{product.count}}"
+              class="form-control"
+            >
+            <button type="submit" class="btn btn-primary ml-3">В корзину</button>
+          </form>
+          {{#if errors.quantity}}
+            <p class="text-danger">{{errors.quantity}}</p>
+          {{/if}}
+          {{/if}}
+        {{else}}
+          <span class="badge badge-danger badge-pill p-2">
+            Товара нет в наличии
+          </span>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+  <div class="product-bottom-content">
+
+  </div>
+</div>

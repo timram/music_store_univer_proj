@@ -6,7 +6,8 @@ const Controller = {
     const posts = await ContentService.getAllPosts({
       offset: req.swagger.params.offset.value,
       limit: req.swagger.params.limit.value,
-      type: req.swagger.params.post_type.value
+      type: req.swagger.params.post_type.value,
+      enabled: req.swagger.params.enabled.value
     });
     return res.json(posts);
   },

@@ -1,8 +1,6 @@
 import React from 'react';
 
 import {
-  compose,
-  withProps,
   branch,
   renderComponent
 } from 'recompose';

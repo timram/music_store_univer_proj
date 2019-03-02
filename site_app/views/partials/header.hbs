@@ -1,6 +1,6 @@
 <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand" href="#">MusicStore</a>
+    <a class="navbar-brand" href="/">MusicStore</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -11,10 +11,10 @@
           <a class="nav-link" href="/catalog">Каталог</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">О нас</a>
+          <a class="nav-link" href="/about-us">О нас</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Контакты</a>
+          <a class="nav-link" href="/contacts">Контакты</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -30,10 +30,28 @@
       </ul>
       <ul class="navbar-nav justify-content-end">
         <li class="nav-item">
-          <a class="nav-link">
-            {{> icons/login}}
-            <span>Войти</span>
+          <a class="nav-link" href="/cart">
+            {{> icons/cart}}
+            {{#if session.cart.quantity}}
+              <span class="cart-quantity">{{session.cart.quantity}}</span>
+            {{/if}}
           </a>
+        </li>
+        <li class="nav-item d-flex align-items-center">
+          {{#if session.account}}
+            <a class="nav-link mr-3w" href="/account">
+              {{> icons/account}}
+            </a>
+            <a class="nav-link" href="/logout">
+              {{> icons/login}}
+              <span>Выйти</span>
+            </a>
+          {{else}}
+            <a class="nav-link" href="/login">
+              {{> icons/login}}
+              <span>Войти</span>
+            </a>
+          {{/if}}
         </li>
       </ul>
     </div>

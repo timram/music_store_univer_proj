@@ -1,0 +1,15 @@
+<div class="home-news-container mt-3">
+  {{#each news}}
+    <div class="news-card-wrapper">
+      <div
+        class="news-card-container"
+        style="background-image: url({{this.image_url}})"
+      >
+        <div class="news-card-content">
+          <h5 class="text-light">{{this.title}}</h5>
+          <p class="text-light">{{this.description}}</p>
+        </div>
+      </div>
+    </div>
+  {{/each}}
+</div>

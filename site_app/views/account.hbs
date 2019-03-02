@@ -1,0 +1,42 @@
+<h3 class="text-primary">
+  Добро пожаловать {{session.account.fname}} {{session.account.lname}}
+</h3> 
+<form method="POST" action="/account">
+  <div class="form-group">
+    <label for="fname">Имя</label>
+    <input
+      value="{{fname}}"
+      type="text"
+      name="fname"
+      id="fname"
+      class="form-control"
+      required
+    >
+  </div>
+  <div class="form-group">
+    <label for="lname">Фамилия</label>
+    <input
+      value="{{lname}}"
+      type="text"
+      name="lname"
+      id="lname"
+      class="form-control"
+      required
+    >
+  </div>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Почта</label>
+    <input
+      value="{{email}}"
+      required
+      type="email"
+      name="email"
+      class="form-control"
+      id="exampleInputEmail1"
+    >
+    {{#if errors.unique.email}}
+      <p class="text-danger mt-2">Пользователь с такой почтой уже существует</p>
+    {{/if}}
+  </div>
+  <button type="submit" class="btn btn-primary">Обновить</button>
+</form>

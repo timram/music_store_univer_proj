@@ -12,7 +12,7 @@ import style from './style.scss';
 export default ({
   availability,
   brand,
-  count, 
+  count,
   name,
   price,
   type,
