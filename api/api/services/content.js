@@ -115,7 +115,7 @@ const Service = {
     try {
       await Service.getPost(postID)
 
-      const formattedPost = await getUpdPostForDB(post);
+      const formattedPost = await getUpdPostForDB(post, true);
       
       await knex('post')
         .update(formattedPost)

@@ -44,6 +44,7 @@ module.exports = {
     token: account.token
   }),
 
+
   getStocks: () => getPosts('stock'),
   getNews: () => getPosts('news'),
   getBlogs: () => getPosts('blog')

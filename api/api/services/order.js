@@ -64,7 +64,12 @@ const Service = {
     } catch (err) {
       processOrderDBErrors(err, order);
     }
-  }
+  },
+
+  getOrdersForCustomer: async ({
+    accID,
+    
+  })
 };
 
 module.exports = Service;
